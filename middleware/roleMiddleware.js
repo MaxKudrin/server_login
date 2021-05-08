@@ -5,7 +5,7 @@ const validation = (roles) => {
     try {
       const token = req.headers.authorization.split(" ")[1];
       if (!token) {
-        return res.status(403).json({message: "Not authorized"});
+        return res.status(403).json({errorMessage: "Not authorized"});
       }
       const data = jwt.verify(token, secret);
       const {roles: userRoles} = data;
@@ -17,7 +17,7 @@ const validation = (roles) => {
         }
       });
       if (!hasRole) {
-        return res.status(403).json({message: "Not authorized"});
+        return res.status(403).json({errorMessage: "Not authorized"});
       }
       next();
     } catch (error) {

@@ -22,12 +22,12 @@ const controller = {
         const {errors: error} = errors;
         return res
           .status(400)
-          .json({error: error[0].msg, param: error[0].param});
+          .json({errorMessage: error[0].msg, param: error[0].param});
       }
       const {username, password} = req.body;
       const user = await User.findOne({username});
       if (user) {
-        return res.status(400).json({message: "User already exist"});
+        return res.status(400).json({errorMessage: "User already exist", param: 'username'});
       }
       const hashPassword = bcrypt.hashSync(password, 4);
       const role = await Role.findOne({value: "USER"});
@@ -47,11 +47,11 @@ const controller = {
       const {username, password} = req.body;
       const user = await User.findOne({username});
       if (!user) {
-        return res.status(400).json({message: "User is not exist"});
+        return res.status(400).json({errorMessage: "User is not exist", param: 'username'});
       }
       const isPasswordCorrect = bcrypt.compareSync(password, user.password);
       if (!isPasswordCorrect) {
-        return res.status(400).json({message: "Password is incorrect"});
+        return res.status(400).json({errorMessage: "Password is incorrect", param: 'password'});
       }
       const token = createWebToken(user._id, user.roles);
       return res.status(200).json({message: "Login success", token});
